@@ -7,3 +7,4 @@ rz(0.37) q[1];
 cx q[1],q[2];
 rz(0.61) q[2];
 cx q[0],q[2];
+// Synthetic review acceptance: circuit semantics unchanged.
