@@ -1,0 +1,68 @@
+name: Gatesmith qscore review
+description: Score immutable PR base/head on the repository runner and upload a data-only bundle.
+inputs:
+  engine-revision:
+    description: Immutable qscore revision matching this Action release.
+    default: 6b42f722730f19a5c3d9b72e1a19cf8d54a0fedd
+  artifact-name:
+    description: Bundle artifact consumed by the Gatesmith GitHub App.
+    default: qscore-review-bundle
+runs:
+  using: composite
+  steps:
+    - name: Reject privileged or unrelated events
+      shell: bash
+      env:
+        EVENT_NAME: ${{ github.event_name }}
+      run: |
+        if [ "$EVENT_NAME" != pull_request ]; then
+          echo 'Gatesmith only supports unprivileged pull_request workflows.' >&2
+          exit 1
+        fi
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+    - name: Install immutable scoring engine and Action client
+      shell: bash
+      env:
+        ENGINE_REVISION: ${{ inputs.engine-revision }}
+        ACTION_DIRECTORY: ${{ github.action_path }}
+      run: |
+        if [ "$ENGINE_REVISION" != 6b42f722730f19a5c3d9b72e1a19cf8d54a0fedd ]; then
+          echo 'The engine revision must match this Action release.' >&2
+          exit 1
+        fi
+        python -m pip install "qscore @ git+https://github.com/GatesmithKnightHacks/Gatesmith.git@${ENGINE_REVISION}#subdirectory=qscore"
+        python -m pip install --no-deps "${ACTION_DIRECTORY}/.."
+    - name: Check out immutable base
+      uses: actions/checkout@v4
+      with:
+        repository: ${{ github.event.pull_request.base.repo.full_name }}
+        ref: ${{ github.event.pull_request.base.sha }}
+        path: gatesmith-base
+        persist-credentials: false
+    - name: Check out immutable head
+      uses: actions/checkout@v4
+      with:
+        repository: ${{ github.event.pull_request.head.repo.full_name }}
+        ref: ${{ github.event.pull_request.head.sha }}
+        path: gatesmith-head
+        persist-credentials: false
+    - name: Score both commits and write bundle
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+        ENGINE_REVISION: ${{ inputs.engine-revision }}
+      run: |
+        python -I -m qscore_review.action bundle \
+          --base "$GITHUB_WORKSPACE/gatesmith-base" \
+          --head "$GITHUB_WORKSPACE/gatesmith-head" \
+          --out "$RUNNER_TEMP/qscore-review-bundle" \
+          --engine-revision "$ENGINE_REVISION"
+    - name: Upload qscore review bundle
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ inputs.artifact-name }}
+        path: ${{ runner.temp }}/qscore-review-bundle
+        if-no-files-found: error
+        retention-days: 7

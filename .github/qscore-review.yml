@@ -1,0 +1,9 @@
+version: 1
+gemini: true
+manifest: qscore.yaml
+target: null
+fail_on: new_high
+general_comments: 0
+max_files: 10
+exclude: ["data/**", "**/*.ipynb_checkpoints/**"]
+language: en

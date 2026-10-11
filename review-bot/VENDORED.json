@@ -1,0 +1,10 @@
+{
+  "source_commit": "fca4b8dd0d841490a60262d9341cd29a84582c01",
+  "sha256": {
+    "src/qscore_review/__init__.py": "2742a7e6e9fdc4f6111384d5390525b64fc16033737a81b278775574eeb0c588",
+    "src/qscore_review/action.py": "abc2e37670090c507f61edd127014c1f826e0e9f4febd8d1085c8a17259914f4",
+    "src/qscore_review/contracts.py": "2232ea7d3474f021b25b29a7776b8cdcdb3eb9e97e21d64cbf103d26e0fe3912",
+    "src/qscore_review/versions.py": "17e0330a1860cd229b340e2e2dbff1ceba0d85b96f86faf6739e532f6c0aaa02",
+    "action/action.yml": "f4912d79bc15cd048e3145c599b5f8dabef7217d3e816e7a441524a6db06f5af"
+  }
+}

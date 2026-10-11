@@ -1,0 +1,28 @@
+schema: qscore.project/v0.2
+project:
+  name: gatesmith-bot-demo
+  root: .
+defaults:
+  target: {backend: line-3, calibration: none}
+  objective:
+    primary: two_qubit_count
+    direction: minimize
+    constraints: []
+    report: [two_qubit_depth, depth, routing_overhead]
+  execution:
+    device: cpu
+    transpiler_seeds: [0, 1]
+    seed_simulator: 1234
+    shots: 4000
+  privacy: {external_inference: false, send_region_only: true}
+circuits:
+  - id: ladder
+    source: {qasm: circuits/ladder.qasm}
+    invariants:
+      intent: exact_unitary
+      global_phase: ignore
+      final_permutation: allowed
+    permitted:
+      changes: [layout, routing, block_resynthesis]
+      approximation: none
+      scope: region

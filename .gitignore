@@ -1,0 +1,6 @@
+qscore-out/
+.venv/
+__pycache__/
+*.egg-info/
+.env
+.env.*
