@@ -1,0 +1,15 @@
+name: qscore review
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+permissions:
+  contents: read
+  actions: read
+jobs:
+  qscore:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: GatesmithKnightHacks/gatesmith-bot-demo/review-bot/action@fbf982c9e49d8e6bd1214ff3bb39052a0b42cc04
+        with:
+          engine-revision: 6b42f722730f19a5c3d9b72e1a19cf8d54a0fedd
