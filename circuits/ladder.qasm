@@ -9,3 +9,4 @@ rz(0.61) q[2];
 cx q[0],q[2];
 // Synthetic review acceptance: circuit semantics unchanged.
 // Synthetic prompt v2 acceptance: same routing regression.
+// Synthetic qualitative review acceptance: circuit still unchanged.
